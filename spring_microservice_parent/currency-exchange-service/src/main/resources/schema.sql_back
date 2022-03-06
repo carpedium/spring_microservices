@@ -1,0 +1,9 @@
+/*
+
+DROP TABLE IF EXISTS CURRENCY_EXCHANGE	;
+
+create table CURRENCY_EXCHANGE (
+		id INT NOT NULL , currency_from VARCHAR(50), currency_to VARCHAR(50), 
+		conversion_multiple NUMERIC(20, 2), environment VARCHAR(50) ) ;
+		
+*/		

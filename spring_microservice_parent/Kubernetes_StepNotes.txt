@@ -1,0 +1,261 @@
+https://shell.cloud.google.com/?hl=en_GB&fromcloudshell=true&show=terminal
+
+
+
+//connect to cluster
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ gcloud container clusters get-credentials ak-cluster --zone us-central1-c --project hybrid-sentry-343117
+Fetching cluster endpoint and auth data.
+kubeconfig entry generated for ak-cluster.
+
+//create deployment ( deployment, replicaset, pod are created at this point )
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+deployment.apps/hello-world-rest-api created
+
+/expose deployment ( service is created at this point )
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+service/hello-world-rest-api exposed
+
+
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get events
+LAST SEEN   TYPE      REASON                    OBJECT                                           MESSAGE
+22m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting kubelet.
+22m         Warning   InvalidDiskCapacity       node/gke-ak-cluster-default-pool-5871f9ac-djpd   invalid capacity 0 on image filesystem
+22m         Normal    NodeHasSufficientMemory   node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd status is now: NodeHasSufficientMemory
+22m         Normal    NodeHasNoDiskPressure     node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd status is now: NodeHasNoDiskPressure
+22m         Normal    NodeHasSufficientPID      node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd status is now: NodeHasSufficientPID
+22m         Normal    NodeAllocatableEnforced   node/gke-ak-cluster-default-pool-5871f9ac-djpd   Updated Node Allocatable limit across pods
+20m         Warning   ContainerdStart           node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting containerd container runtime...
+20m         Warning   DockerStart               node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting Docker Application Container Engine...
+20m         Warning   KubeletStart              node/gke-ak-cluster-default-pool-5871f9ac-djpd   Started Kubernetes kubelet.
+20m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting kube-proxy.
+20m         Normal    RegisteredNode            node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd event: Registered Node gke-ak-cluster-default-pool-5871f9ac-djpd in Controller
+22m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting kubelet.
+22m         Warning   InvalidDiskCapacity       node/gke-ak-cluster-default-pool-5871f9ac-ml33   invalid capacity 0 on image filesystem
+22m         Normal    NodeHasSufficientMemory   node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 status is now: NodeHasSufficientMemory
+22m         Normal    NodeHasNoDiskPressure     node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 status is now: NodeHasNoDiskPressure
+22m         Normal    NodeHasSufficientPID      node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 status is now: NodeHasSufficientPID
+22m         Normal    NodeAllocatableEnforced   node/gke-ak-cluster-default-pool-5871f9ac-ml33   Updated Node Allocatable limit across pods
+20m         Warning   ContainerdStart           node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting containerd container runtime...
+20m         Warning   DockerStart               node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting Docker Application Container Engine...
+20m         Warning   KubeletStart              node/gke-ak-cluster-default-pool-5871f9ac-ml33   Started Kubernetes kubelet.
+20m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting kube-proxy.
+20m         Normal    RegisteredNode            node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 event: Registered Node gke-ak-cluster-default-pool-5871f9ac-ml33 in Controller
+22m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-vh57   Starting kubelet.
+22m         Warning   InvalidDiskCapacity       node/gke-ak-cluster-default-pool-5871f9ac-vh57   invalid capacity 0 on image filesystem
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get nodes
+NAME                                        STATUS   ROLES    AGE   VERSION
+gke-ak-cluster-default-pool-5871f9ac-djpd   Ready    <none>   23m   v1.21.6-gke.1503
+gke-ak-cluster-default-pool-5871f9ac-ml33   Ready    <none>   23m   v1.21.6-gke.1503
+gke-ak-cluster-default-pool-5871f9ac-vh57   Ready    <none>   23m   v1.21.6-gke.1503
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get pods
+NAME                                    READY   STATUS    RESTARTS   AGE
+hello-world-rest-api-687d9c7bc7-r2krc   1/1     Running   0          8m58s
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get pod
+NAME                                    READY   STATUS    RESTARTS   AGE
+hello-world-rest-api-687d9c7bc7-r2krc   1/1     Running   0          9m
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get replicaset
+NAME                              DESIRED   CURRENT   READY   AGE
+hello-world-rest-api-687d9c7bc7   1         1         1       9m7s
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get deployment
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+hello-world-rest-api   1/1     1            1           9m46s
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get service
+NAME                   TYPE           CLUSTER-IP   EXTERNAL-IP       PORT(S)          AGE
+hello-world-rest-api   LoadBalancer   10.8.1.114   104.154.141.185   8080:32696/TCP   8m14s
+kubernetes             ClusterIP      10.8.0.1     <none>            443/TCP          25m
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$
+
+
+##########3##########3##########3##########3##########3##########3##########3##########3##########3
+POD is the smalled deployable entitiy in kubernetes 
+
+## EAch POD has its own IP Address
+
+POD can contain multiple containers.
+container within a pod share resources and can talk to each other using localhost
+
+##########3##########3##########3##########3##########3##########3##########3##########3##########3
+
+
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get pod -o wide
+NAME                                    READY   STATUS    RESTARTS   AGE   IP         NODE                                        NOMINATED NODE   READINESS GATES
+hello-world-rest-api-687d9c7bc7-r2krc   1/1     Running   0          16m   10.4.1.4   gke-ak-cluster-default-pool-5871f9ac-ml33   <none>           <none>
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$
+
+
+// use below like  a help command
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl explain pods
+KIND:     Pod
+VERSION:  v1
+
+DESCRIPTION:
+     Pod is a collection of containers that can run on a host. This resource is
+     created by clients and scheduled onto hosts.
+
+FIELDS:
+   apiVersion   <string>
+     APIVersion defines the versioned schema of this representation of an
+     object. Servers should convert recognized schemas to the latest internal
+     value, and may reject unrecognized values. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+
+   kind <string>
+     Kind is a string value representing the REST resource this object
+     represents. Servers may infer this from the endpoint the client submits
+     requests to. Cannot be updated. In CamelCase. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+
+   metadata     <Object>
+     Standard object s metadata. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+
+   spec <Object>
+     Specification of the desired behavior of the pod. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+	 
+	 
+	 
+// 	 kubectl describe pod <podName> gives detailed explaination about a pod
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl describe pod hello-world-rest-api-687d9c7bc7-r2krc
+Name:         hello-world-rest-api-687d9c7bc7-r2krc
+Namespace:    default
+Priority:     0
+Node:         gke-ak-cluster-default-pool-5871f9ac-ml33/10.128.0.3
+Start Time:   Fri, 04 Mar 2022 18:05:26 +0000
+Labels:       app=hello-world-rest-api
+              pod-template-hash=687d9c7bc7
+Annotations:  <none>
+Status:       Running
+IP:           10.4.1.4
+IPs:
+  IP:           10.4.1.4
+Controlled By:  ReplicaSet/hello-world-rest-api-687d9c7bc7
+Containers:
+  hello-world-rest-api:
+    Container ID:   containerd://1d6a6b668d1f150b3eb4ab25e54162b00bc3421d7b0f319b97270adfedd331e0
+    Image:          in28min/hello-world-rest-api:0.0.1.RELEASE
+    Image ID:       docker.io/in28min/hello-world-rest-api@sha256:00469c343814aabe56ad1034427f546d43bafaaa11208a1eb0720993743f72be
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 04 Mar 2022 18:05:33 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-722vl (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  kube-api-access-722vl:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  21m   default-scheduler  Successfully assigned default/hello-world-rest-api-687d9c7bc7-r2krc to gke-ak-cluster-default-pool-5871f9ac-ml33
+  Normal  Pulling    21m   kubelet            Pulling image "in28min/hello-world-rest-api:0.0.1.RELEASE"
+  Normal  Pulled     21m   kubelet            Successfully pulled image "in28min/hello-world-rest-api:0.0.1.RELEASE" in 4.145135322s
+  Normal  Created    21m   kubelet            Created container hello-world-rest-api
+  Normal  Started    21m   kubelet            Started container hello-world-rest-api
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$	 
+
+// scaling up the number of PODS.
+// if number of pods decreases than required number, kubernetes automatically creates a new pod to maintain the reqd number of pods
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl scale deployment hello-world-rest-api --replicas=3
+deployment.apps/hello-world-rest-api scaled
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get pods -o wide
+NAME                                    READY   STATUS              RESTARTS   AGE   IP         NODE                                        NOMINATED NODE   READINESS GATES
+hello-world-rest-api-687d9c7bc7-djsft   1/1     Running             0          5s    10.4.1.5   gke-ak-cluster-default-pool-5871f9ac-ml33   <none>           <none>
+hello-world-rest-api-687d9c7bc7-r2krc   1/1     Running             0          37m   10.4.1.4   gke-ak-cluster-default-pool-5871f9ac-ml33   <none>           <none>
+hello-world-rest-api-687d9c7bc7-sbn5p   0/1     ContainerCreating   0          5s    <none>     gke-ak-cluster-default-pool-5871f9ac-vh57   <none>           <none>
+
+
+// Get events in sorted order of creation time
+
+ankitkumarsingh_monty@cloudshell:~ (hybrid-sentry-343117)$ kubectl get events --sort-by=.metadata.creationTimestamp
+LAST SEEN   TYPE      REASON                    OBJECT                                           MESSAGE
+57m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting kubelet.
+57m         Normal    NodeHasSufficientMemory   node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 status is now: NodeHasSufficientMemory
+57m         Warning   InvalidDiskCapacity       node/gke-ak-cluster-default-pool-5871f9ac-ml33   invalid capacity 0 on image filesystem
+55m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting kube-proxy.
+55m         Warning   KubeletStart              node/gke-ak-cluster-default-pool-5871f9ac-ml33   Started Kubernetes kubelet.
+55m         Warning   ContainerdStart           node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting containerd container runtime...
+57m         Normal    NodeAllocatableEnforced   node/gke-ak-cluster-default-pool-5871f9ac-ml33   Updated Node Allocatable limit across pods
+57m         Normal    NodeHasSufficientPID      node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 status is now: NodeHasSufficientPID
+57m         Normal    NodeHasNoDiskPressure     node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 status is now: NodeHasNoDiskPressure
+55m         Warning   DockerStart               node/gke-ak-cluster-default-pool-5871f9ac-ml33   Starting Docker Application Container Engine...
+57m         Warning   InvalidDiskCapacity       node/gke-ak-cluster-default-pool-5871f9ac-vh57   invalid capacity 0 on image filesystem
+57m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-vh57   Starting kubelet.
+57m         Normal    NodeHasSufficientMemory   node/gke-ak-cluster-default-pool-5871f9ac-vh57   Node gke-ak-cluster-default-pool-5871f9ac-vh57 status is now: NodeHasSufficientMemory
+57m         Normal    NodeHasNoDiskPressure     node/gke-ak-cluster-default-pool-5871f9ac-vh57   Node gke-ak-cluster-default-pool-5871f9ac-vh57 status is now: NodeHasNoDiskPressure
+57m         Normal    NodeHasSufficientPID      node/gke-ak-cluster-default-pool-5871f9ac-vh57   Node gke-ak-cluster-default-pool-5871f9ac-vh57 status is now: NodeHasSufficientPID
+57m         Normal    NodeAllocatableEnforced   node/gke-ak-cluster-default-pool-5871f9ac-vh57   Updated Node Allocatable limit across pods
+55m         Warning   ContainerdStart           node/gke-ak-cluster-default-pool-5871f9ac-vh57   Starting containerd container runtime...
+55m         Warning   DockerStart               node/gke-ak-cluster-default-pool-5871f9ac-vh57   Starting Docker Application Container Engine...
+55m         Warning   KubeletStart              node/gke-ak-cluster-default-pool-5871f9ac-vh57   Started Kubernetes kubelet.
+55m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-vh57   Starting kube-proxy.
+55m         Normal    RegisteredNode            node/gke-ak-cluster-default-pool-5871f9ac-vh57   Node gke-ak-cluster-default-pool-5871f9ac-vh57 event: Registered Node gke-ak-cluster-default-pool-5871f9ac-vh57 in Controller
+55m         Normal    RegisteredNode            node/gke-ak-cluster-default-pool-5871f9ac-ml33   Node gke-ak-cluster-default-pool-5871f9ac-ml33 event: Registered Node gke-ak-cluster-default-pool-5871f9ac-ml33 in Controller
+57m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting kubelet.
+55m         Warning   ContainerdStart           node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting containerd container runtime...
+57m         Warning   InvalidDiskCapacity       node/gke-ak-cluster-default-pool-5871f9ac-djpd   invalid capacity 0 on image filesystem
+55m         Normal    Starting                  node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting kube-proxy.
+55m         Warning   KubeletStart              node/gke-ak-cluster-default-pool-5871f9ac-djpd   Started Kubernetes kubelet.
+55m         Warning   DockerStart               node/gke-ak-cluster-default-pool-5871f9ac-djpd   Starting Docker Application Container Engine...
+57m         Normal    NodeAllocatableEnforced   node/gke-ak-cluster-default-pool-5871f9ac-djpd   Updated Node Allocatable limit across pods
+57m         Normal    NodeHasSufficientPID      node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd status is now: NodeHasSufficientPID
+57m         Normal    NodeHasNoDiskPressure     node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd status is now: NodeHasNoDiskPressure
+57m         Normal    NodeHasSufficientMemory   node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd status is now: NodeHasSufficientMemory
+55m         Normal    RegisteredNode            node/gke-ak-cluster-default-pool-5871f9ac-djpd   Node gke-ak-cluster-default-pool-5871f9ac-djpd event: Registered Node gke-ak-cluster-default-pool-5871f9ac-djpd in Controller
+40m         Normal    ScalingReplicaSet         deployment/hello-world-rest-api                  Scaled up replica set hello-world-rest-api-687d9c7bc7 to 1
+40m         Normal    SuccessfulCreate          replicaset/hello-world-rest-api-687d9c7bc7       Created pod: hello-world-rest-api-687d9c7bc7-r2krc
+40m         Normal    Scheduled                 pod/hello-world-rest-api-687d9c7bc7-r2krc        Successfully assigned default/hello-world-rest-api-687d9c7bc7-r2krc to gke-ak-cluster-default-pool-5871f9ac-ml33
+40m         Normal    Pulling                   pod/hello-world-rest-api-687d9c7bc7-r2krc        Pulling image "in28min/hello-world-rest-api:0.0.1.RELEASE"
+40m         Normal    Pulled                    pod/hello-world-rest-api-687d9c7bc7-r2krc        Successfully pulled image "in28min/hello-world-rest-api:0.0.1.RELEASE" in 4.145135322s
+40m         Normal    Created                   pod/hello-world-rest-api-687d9c7bc7-r2krc        Created container hello-world-rest-api
+40m         Normal    Started                   pod/hello-world-rest-api-687d9c7bc7-r2krc        Started container hello-world-rest-api
+39m         Normal    EnsuringLoadBalancer      service/hello-world-rest-api                     Ensuring load balancer
+38m         Normal    EnsuredLoadBalancer       service/hello-world-rest-api                     Ensured load balancer
+3m28s       Normal    ScalingReplicaSet         deployment/hello-world-rest-api                  Scaled up replica set hello-world-rest-api-687d9c7bc7 to 3
+3m27s       Normal    SuccessfulCreate          replicaset/hello-world-rest-api-687d9c7bc7       Created pod: hello-world-rest-api-687d9c7bc7-djsft
+3m27s       Normal    SuccessfulCreate          replicaset/hello-world-rest-api-687d9c7bc7       Created pod: hello-world-rest-api-687d9c7bc7-sbn5p
+3m25s       Normal    Started                   pod/hello-world-rest-api-687d9c7bc7-djsft        Started container hello-world-rest-api
+3m25s       Normal    Pulling                   pod/hello-world-rest-api-687d9c7bc7-sbn5p        Pulling image "in28min/hello-world-rest-api:0.0.1.RELEASE"
+3m25s       Normal    Pulled                    pod/hello-world-rest-api-687d9c7bc7-djsft        Container image "in28min/hello-world-rest-api:0.0.1.RELEASE" already present on machine
+3m26s       Normal    Scheduled                 pod/hello-world-rest-api-687d9c7bc7-sbn5p        Successfully assigned default/hello-world-rest-api-687d9c7bc7-sbn5p to gke-ak-cluster-default-pool-5871f9ac-vh57
+3m25s       Normal    Created                   pod/hello-world-rest-api-687d9c7bc7-djsft        Created container hello-world-rest-api
+3m26s       Normal    Scheduled                 pod/hello-world-rest-api-687d9c7bc7-djsft        Successfully assigned default/hello-world-rest-api-687d9c7bc7-djsft to gke-ak-cluster-default-pool-5871f9ac-ml33
+3m21s       Normal    Pulled                    pod/hello-world-rest-api-687d9c7bc7-sbn5p        Successfully pulled image "in28min/hello-world-rest-api:0.0.1.RELEASE" in 4.14484364s
+3m20s       Normal    Started                   pod/hello-world-rest-api-687d9c7bc7-sbn5p        Started container hello-world-rest-api
+3m20s       Normal    Created                   pod/hello-world-rest-api-687d9c7bc7-sbn5p        Created container hello-world-rest-api
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

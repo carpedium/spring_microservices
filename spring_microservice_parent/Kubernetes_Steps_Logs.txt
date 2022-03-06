@@ -1,0 +1,56 @@
+
+ankit@LAPTOP-JKFLLSN2 java_workspace$  kubectl get nodes
+NAME                                        STATUS   ROLES    AGE   VERSION
+gke-ak-cluster-default-pool-93ad3bc5-7608   Ready    <none>   31m   v1.21.6-gke.1503
+gke-ak-cluster-default-pool-93ad3bc5-7mtw   Ready    <none>   31m   v1.21.6-gke.1503
+gke-ak-cluster-default-pool-93ad3bc5-qrst   Ready    <none>   31m   v1.21.6-gke.1503
+
+
+ankit@LAPTOP-JKFLLSN2 java_workspace$  kubectl create deployment currency-conversion --image=ankitkumarsingh0000/mmv1-currency-conversion-service:0.0.11-SNAPSHOT
+
+
+Events post above command
+
+4s	Normal	Scheduled			pod/currency-conversion-785cdbddd-zgpdl		Successfully assigned default/currency-conversion-785cdbddd-zgpdl to gke-ak-cluster-default-pool-93ad3bc5-7mtw
+4s	Normal	ScalingReplicaSet	deployment/currency-conversion				Scaled up replica set currency-conversion-785cdbddd to 1
+4s	Normal	SuccessfulCreate	replicaset/currency-conversion-785cdbddd	Created pod: currency-conversion-785cdbddd-zgpdl
+3s	Normal	Pulling				pod/currency-conversion-785cdbddd-zgpdl		Pulling image "ankitkumarsingh0000/mmv1-currency-conversion-service:0.0.11-SNAPSHOT"
+0s	Normal	Pulled				pod/currency-conversion-785cdbddd-zgpdl		Successfully pulled image "ankitkumarsingh0000/mmv1-currency-conversion-ser
+
+// No change in NODES, and SERVICES (  because application is still exposed . only Created )
+
+ankit@LAPTOP-JKFLLSN2 java_workspace$  kubectl get deployments
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+currency-conversion   1/1     1            1           56s   <---- NEW After "create Deployment "
+currency-exchange     1/1     1            1           15m
+
+
+ankit@LAPTOP-JKFLLSN2 java_workspace$  kubectl get rs
+NAME                            DESIRED   CURRENT   READY   AGE
+currency-conversion-785cdbddd   1         1         1       2m47s	<---- NEW After "create Deployment "
+currency-exchange-c49654f77     1         1         1       17m
+
+ankit@LAPTOP-JKFLLSN2 java_workspace$  kubectl get pods
+NAME                                  READY   STATUS    RESTARTS   AGE
+currency-conversion-785cdbddd-zgpdl   1/1     Running   0          3m11s	<---- NEW After "create Deployment "
+currency-exchange-c49654f77-v6gkd     1/1     Running   0          17m
+
+
+
+
+ankit@LAPTOP-JKFLLSN2 java_workspace$ kubectl expose deployment currency-conversion --type=LoadBalancer --port=8000
+service/currency-conversion exposed
+
+
+74s         Normal    EnsuringLoadBalancer      service/currency-conversion                      Ensuring load balancer
+39s         Normal    EnsuredLoadBalancer       service/currency-conversion                      Ensured load balancer
+
+
+Only the services change. pods/rs/nodes remain the same
+
+ankit@LAPTOP-JKFLLSN2 java_workspace$  kubectl get svc
+NAME                  TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)          AGE
+currency-conversion   LoadBalancer   10.8.16.217   34.123.1.160   8000:30665/TCP   66s		<---- NEW After "create Deployment "
+currency-exchange     LoadBalancer   10.8.23.202   35.193.0.11    8000:32145/TCP   18m
+kubernetes            ClusterIP      10.8.16.1     <none>         443/TCP          39m
+

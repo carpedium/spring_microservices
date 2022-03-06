@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+
+	<Properties>
+		<Property name="LOG_PATTERN">%-5level %C{5}:%L - %m%n  </Property>
+	</Properties>
+	<Appenders>
+		<Console name="LogToConsole" target="SYSTEM_OUT">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+
+		<!-- <RollingFile  name="appLog" fileName="logs/app.log"  filePattern="logs/app.log.%i">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<OnStartupTriggeringPolicy />			
+		</RollingFile >
+		
+		<RollingFile  name="backendLog" fileName="logs/backend.log"  filePattern="logs/backend.log.%i">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<OnStartupTriggeringPolicy />			
+		</RollingFile >
+		 -->
+		
+	</Appenders>
+
+	<Loggers>
+
+	<!-- 	<Logger name="com.learn" level="debug" additivity="false">
+			<AppenderRef ref="appLog"  level="DEBUG"/>
+			<AppenderRef ref="LogToConsole" />
+		</Logger>
+
+		<Logger name="org.springframework" level="debug" additivity="false">
+			<AppenderRef ref="backendLog" />
+			<AppenderRef ref="LogToConsole" />
+		</Logger> -->
+
+
+		<Root level="info">
+			<AppenderRef ref="LogToConsole" />
+		</Root>
+	</Loggers>
+</Configuration>
